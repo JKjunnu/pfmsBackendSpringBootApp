@@ -1,0 +1,13 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://10.101.43.93:5432/pfms_db
+    username: postgres
+    password: ictd
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
