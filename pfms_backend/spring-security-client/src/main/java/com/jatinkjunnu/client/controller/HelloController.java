@@ -3,6 +3,7 @@ package com.jatinkjunnu.client.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,7 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class HelloController {
 
     @Autowired
@@ -42,4 +44,10 @@ public class HelloController {
                 .bodyToMono(String[].class)
                 .block();
     }
+
+    @GetMapping("/messages")
+    public String[] message(){
+        return new String[]{"Jatin", "Nikhil","Shivam"};
+    }
+
 }

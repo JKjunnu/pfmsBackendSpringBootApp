@@ -9,6 +9,7 @@ import com.jatinkjunnu.client.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +18,38 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-public class RegistrationController {
+@CrossOrigin(origins = "http://localhost:4200")
+public class AuthController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @PostMapping("/login")
+    public ResponseEntity<UserModel> loginUser(@RequestBody UserModel userModel){
+        UserEntity userEntity = userService.findUserByEmail(userModel.getEmail());
+
+        if(!userEntity.isEnabled()){
+            throw new IllegalStateException("User Not Registered");
+        }else{
+            if(!userService.validateUserPassword(userEntity,userModel)){
+                throw new IllegalStateException("Credentials Don't Match");
+            }else {
+                UserModel userResponse = new UserModel();
+                userResponse.setId(userEntity.getId());
+                userResponse.setEmail(userEntity.getEmail());
+                userResponse.setRole(userEntity.getRole());
+                userResponse.setEnabled(userEntity.isEnabled());
+                userResponse.setFirstName(userEntity.getFirstName());
+                userResponse.setLastName(userEntity.getLastName());
+                return ResponseEntity.ok(userResponse);
+            }
+        }
+
+
+    }
 
     @PostMapping("/register")
     public String registerUser(@RequestBody UserModel userModel, final HttpServletRequest request) {

@@ -30,6 +30,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    @Override
+    public boolean validateUserPassword(UserEntity userEntity, UserModel userModel){
+        return passwordEncoder.matches(userModel.getPassword(),userEntity.getPassword());
+    }
+
     @Override
     public UserEntity registerUser(UserModel userModel) {
         UserEntity user = new UserEntity();
@@ -85,7 +91,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+
+        if(user.isEmpty()){
+            throw new IllegalStateException("User Not Found");
+        }
+
+        else {
+            return user.get();
+        }
     }
 
     @Override

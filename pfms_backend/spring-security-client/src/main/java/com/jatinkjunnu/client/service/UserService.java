@@ -26,4 +26,6 @@ public interface UserService {
     void changePassword(UserEntity user, String newPassword);
 
     boolean checkIfValidOldPassword(UserEntity user, String oldPassword);
+
+    boolean validateUserPassword(UserEntity user, UserModel userModel);
 }
